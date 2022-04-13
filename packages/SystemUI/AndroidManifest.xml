@@ -212,6 +212,9 @@
     <permission android:name="com.android.systemui.permission.SCREEN_RECORDING"
             android:protectionLevel="signature" />
 
+    <!-- To broadcast status of the GameSpaceManager -->
+    <uses-permission android:name="android.permission.MANAGE_GAME_MODE" />
+
     <permission android:name="android.permission.CUSTOMIZE_SYSTEM_UI"
         android:protectionLevel="signature|privileged" />
 

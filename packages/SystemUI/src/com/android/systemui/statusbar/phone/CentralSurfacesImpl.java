@@ -253,6 +253,8 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
     private float mTransitionToFullShadeProgress = 0f;
     private final NotificationListContainer mNotifListContainer;
 
+    protected com.android.systemui.statusbar.policy.GameSpaceManager mGameSpaceManager;
+
     private final KeyguardStateController.Callback mKeyguardStateControllerCallback =
             new KeyguardStateController.Callback() {
                 @Override
@@ -738,6 +740,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
         mWindowManager = windowManager;
         mWindowManagerProvider = windowManagerProvider;
         mSessionTracker = sessionTracker;
+        mGameSpaceManager = new com.android.systemui.statusbar.policy.GameSpaceManager(mContext, keyguardStateController);
     }
 
     private void initBubbles(Bubbles bubbles) {
@@ -751,6 +754,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
 
     @Override
     public void start() {
+        mGameSpaceManager.observe();
         mScreenLifecycle.addObserver(mScreenObserver);
         mWakefulnessLifecycle.addObserver(mWakefulnessObserver);
         mUiModeManager = mContext.getSystemService(UiModeManager.class);
@@ -1329,6 +1333,9 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
     }
 
     private void maybeEscalateHeadsUp() {
+        if (mGameSpaceManager != null && mGameSpaceManager.shouldSuppressFullScreenIntent()) {
+            return;
+        }
         mHeadsUpManager.getAllEntries().forEach(entry -> {
             final StatusBarNotification sbn = entry.getSbn();
             final Notification notification = sbn.getNotification();
@@ -2802,5 +2809,10 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces {
     public ActivityTransitionAnimator.Controller getAnimatorControllerFromNotification(
             ExpandableNotificationRow associatedView) {
         return mNotificationAnimationProvider.getAnimatorController(associatedView);
+    }
+
+    @Override
+    public com.android.systemui.statusbar.policy.GameSpaceManager getGameSpaceManager() {
+        return mGameSpaceManager;
     }
 }

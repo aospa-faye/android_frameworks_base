@@ -258,4 +258,9 @@ public interface CentralSurfaces extends Dumpable, LifecycleOwner, CoreStartable
      */
     ActivityTransitionAnimator.Controller getAnimatorControllerFromNotification(
             ExpandableNotificationRow associatedView);
+
+    /**
+     * Gets the GameSpaceManager instance.
+     */
+    com.android.systemui.statusbar.policy.GameSpaceManager getGameSpaceManager();
 }
