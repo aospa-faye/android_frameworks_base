@@ -4630,6 +4630,75 @@ public final class MediaCodecInfo {
                             maxBlocks, maxBlocksPerSecond,
                             4 /* blockWidth */, 4 /* blockHeight */,
                             1 /* widthAlignment */, 1 /* heightAlignment */);
+                } else if (mime.equalsIgnoreCase(MediaFormat.MIMETYPE_VIDEO_DOLBY_VISION)) {
+                    maxBlocks = 36864 >> 6;
+                    maxBlocksPerSecond = maxBlocks * 15;
+                    maxBps = 128000;
+                    for (CodecProfileLevel profileLevel: profileLevels) {
+                        double FR = 0;
+                        int FS = 0;
+                        int BR = 0;
+                        switch (profileLevel.level) {
+                            case CodecProfileLevel.DolbyVisionLevelHd24:
+                                FR =    24; FS =   1280 * 720;  BR =   20000; break;
+                            case CodecProfileLevel.DolbyVisionLevelHd30:
+                                FR =    30; FS =   1280 * 720;  BR =   20000; break;
+                            case CodecProfileLevel.DolbyVisionLevelFhd24:
+                                FR =    24; FS =  1920 * 1080;  BR =   20000; break;
+                            case CodecProfileLevel.DolbyVisionLevelFhd30:
+                                FR =    30; FS =  1920 * 1080;  BR =   20000; break;
+                            case CodecProfileLevel.DolbyVisionLevelFhd60:
+                                FR =    60; FS =  1920 * 1080;  BR =   25000; break;
+                            case CodecProfileLevel.DolbyVisionLevelUhd24:
+                                FR =    24; FS =  3840 * 2160;  BR =   25000; break;
+                            case CodecProfileLevel.DolbyVisionLevelUhd30:
+                                FR =    30; FS =  3840 * 2160;  BR =   30000; break;
+                            case CodecProfileLevel.DolbyVisionLevelUhd48:
+                                FR =    48; FS =  3840 * 2160;  BR =   40000; break;
+                            case CodecProfileLevel.DolbyVisionLevelUhd60:
+                                FR =    60; FS =  3840 * 2160;  BR =   50000; break;
+                            case CodecProfileLevel.DolbyVisionLevelUhd120:
+                                FR =   120; FS =  3840 * 2160;  BR =  100000; break;
+                            case CodecProfileLevel.DolbyVisionLevel8k30:
+                                FR =    30; FS =  7680 * 4320;  BR =  100000; break;
+                            case CodecProfileLevel.DolbyVisionLevel8k60:
+                                FR =    60; FS =  7680 * 4320;  BR =  160000; break;
+                            default:
+                                Log.w(TAG, "Unrecognized level "
+                                        + profileLevel.level + " for " + mime);
+                                errors |= ERROR_UNRECOGNIZED;
+                        }
+                        switch (profileLevel.profile) {
+                            case CodecProfileLevel.DolbyVisionProfileDvavPer:
+                            case CodecProfileLevel.DolbyVisionProfileDvavPen:
+                            case CodecProfileLevel.DolbyVisionProfileDvheDer:
+                            case CodecProfileLevel.DolbyVisionProfileDvheDen:
+                            case CodecProfileLevel.DolbyVisionProfileDvheDtr:
+                            case CodecProfileLevel.DolbyVisionProfileDvheStn:
+                            case CodecProfileLevel.DolbyVisionProfileDvheDth:
+                            case CodecProfileLevel.DolbyVisionProfileDvheDtb:
+                            case CodecProfileLevel.DolbyVisionProfileDvheSt:
+                            case CodecProfileLevel.DolbyVisionProfileDvavSe:
+                            case CodecProfileLevel.DolbyVisionProfileDvav110:
+                                break;
+                            default:
+                                Log.w(TAG, "Unrecognized profile "
+                                        + profileLevel.profile + " for " + mime);
+                                errors |= ERROR_UNRECOGNIZED;
+                        }
+                        FS >>= 6;
+                        errors &= ~ERROR_NONE_SUPPORTED;
+                        maxBlocksPerSecond = Math.max((int) (FR * FS), maxBlocksPerSecond);
+                        maxBlocks = Math.max(FS, maxBlocks);
+                        maxBps = Math.max(BR * 1000, maxBps);
+                    }
+
+                    int maxLengthInBlocks = (int) (Math.sqrt(maxBlocks * 8));
+                    applyMacroBlockLimits(
+                            maxLengthInBlocks, maxLengthInBlocks,
+                            maxBlocks, maxBlocksPerSecond,
+                            8 /* blockWidth */, 8 /* blockHeight */,
+                            1 /* widthAlignment */, 1 /* heightAlignment */);
                 } else {
                     Log.w(TAG, "Unsupported mime " + mime);
                     // using minimal bitrate here.  should be overridden by
