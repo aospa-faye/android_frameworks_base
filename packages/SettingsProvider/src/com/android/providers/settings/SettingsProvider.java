@@ -490,6 +490,23 @@ public class SettingsProvider extends ContentProvider {
                         callingDeviceId, setting, isTrackingGeneration(args));
             }
             case Settings.CALL_METHOD_GET_SYSTEM -> {
+                if (Settings.System.ACCELEROMETER_ROTATION.equals(name)) {
+                    String callingPackage = getCallingPackage();
+                    if (callingPackage == null) {
+                        try {
+                            String[] packages = getContext().getPackageManager()
+                                    .getPackagesForUid(android.os.Binder.getCallingUid());
+                            if (packages != null && packages.length > 0) {
+                                callingPackage = packages[0];
+                            }
+                        } catch (Exception ignored) {}
+                    }
+                    if ("com.oplus.camera".equals(callingPackage) || "com.oneplus.camera".equals(callingPackage)) {
+                        Bundle res = new Bundle();
+                        res.putString(Settings.NameValueTable.VALUE, "1");
+                        return res;
+                    }
+                }
                 Setting setting = getSystemSetting(name, requestingUserId, callingDeviceId);
                 // If any overridden setting is not available for a virtual device, return the
                 // setting corresponding to the default device.
