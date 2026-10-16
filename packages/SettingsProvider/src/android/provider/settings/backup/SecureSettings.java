@@ -356,6 +356,7 @@ public class SecureSettings {
         Settings.Secure.DISPLAY_COLOR_BALANCE_BLUE,
         Settings.Secure.DISPLAY_COLOR_TEMPERATURE,
         Settings.Secure.DISPLAY_COLOR_SATURATION,
-        Settings.Secure.HIDE_DEVELOPER_STATUS
+        Settings.Secure.HIDE_DEVELOPER_STATUS,
+        Settings.Secure.HAPTIC_EFFECTS_PROFILE
     };
 }

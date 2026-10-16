@@ -561,5 +561,6 @@ public class SecureSettingsValidators {
         VALIDATORS.put(Secure.DISPLAY_COLOR_TEMPERATURE, new InclusiveIntegerRangeValidator(3000, 9000));
         VALIDATORS.put(Secure.DISPLAY_COLOR_SATURATION, new InclusiveIntegerRangeValidator(0, 200));
         VALIDATORS.put(Secure.HIDE_DEVELOPER_STATUS, ANY_STRING_VALIDATOR);
+        VALIDATORS.put(Secure.HAPTIC_EFFECTS_PROFILE, ANY_STRING_VALIDATOR);
     }
 }

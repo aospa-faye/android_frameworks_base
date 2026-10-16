@@ -14626,6 +14626,12 @@ public final class Settings {
         @FlaggedApi("com.android.server.notification.favorites_incoming_call_lights")
         public static final String LIGHT_ANIMATION_FAVORITE_CALLS_ENABLED =
                 "light_animation_favorite_calls_enabled";
+
+        /**
+         * Haptic effects profile to be used
+         * @hide
+         */
+        public static final String HAPTIC_EFFECTS_PROFILE = "haptic_effects_profile";
     }
 
     /**
