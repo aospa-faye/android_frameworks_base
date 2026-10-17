@@ -27,9 +27,11 @@ import android.hardware.camera2.ICameraDeviceUser;
 import android.hardware.camera2.params.OutputConfiguration;
 import android.hardware.camera2.utils.TaskDrainer;
 import android.hardware.camera2.utils.TaskSingleDrainer;
+import android.app.ActivityThread;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.os.SystemProperties;
 import android.util.Log;
 import android.view.Surface;
 
@@ -1049,6 +1051,13 @@ public class CameraCaptureSessionImpl extends CameraCaptureSession
                 // Fast path: A new capture session has replaced this one; don't wait for idle
                 // as we won't get state updates any more anyway.
                 if (mSkipUnconfigure) {
+                    return;
+                }
+
+                String packageName = ActivityThread.currentPackageName();
+                if ("com.oplus.camera".equals(packageName) ||
+                        (packageName != null && SystemProperties.get("vendor.camera.skip_unconfigure.packagelist", "").contains(packageName))) {
+                    if (DEBUG) Log.v(TAG, mIdString + "Skipping unconfigure for package: " + packageName);
                     return;
                 }
 
