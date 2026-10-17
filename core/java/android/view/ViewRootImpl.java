@@ -1257,7 +1257,7 @@ public final class ViewRootImpl implements ViewParent,
     @Surface.FrameRateCompatibility int mFrameRateCompatibility =
             FRAME_RATE_COMPATIBILITY_FIXED_SOURCE;
     // time for initial touch boost period.
-    private static final int FRAME_RATE_INITIAL_TOUCH_BOOST_TIME = 30;
+    private static final int FRAME_RATE_INITIAL_TOUCH_BOOST_TIME = 100;
     // time for touch boost period.
     private static final int FRAME_RATE_TOUCH_BOOST_TIME = 3000;
     // Timeout for the other frame rate boosts other than touch boost.
@@ -14271,8 +14271,8 @@ public final class ViewRootImpl implements ViewParent,
             frameRateCategory = FRAME_RATE_CATEGORY_HIGH;
             frameRateReason = FRAME_RATE_CATEGORY_REASON_BOOST;
             view = null;
-        } else if (mIsTouchBoosting && preferredFrameRateCategory < FRAME_RATE_CATEGORY_HIGH_HINT) {
-            frameRateCategory = FRAME_RATE_CATEGORY_HIGH_HINT;
+        } else if (mIsTouchBoosting && preferredFrameRateCategory < FRAME_RATE_CATEGORY_HIGH) {
+            frameRateCategory = FRAME_RATE_CATEGORY_HIGH;
             frameRateReason = FRAME_RATE_CATEGORY_REASON_TOUCH;
             view = null;
         } else {

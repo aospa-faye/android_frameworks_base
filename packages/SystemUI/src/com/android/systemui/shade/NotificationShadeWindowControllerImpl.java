@@ -481,7 +481,8 @@ public class NotificationShadeWindowControllerImpl
                             && state.statusBarState == StatusBarState.KEYGUARD
                             && !state.keyguardFadingAway
                             && !state.keyguardGoingAway;
-            if (state.dozing || bypassOnKeyguard) {
+            if ((state.dozing || bypassOnKeyguard)
+                    && !state.shadeOrQsExpanded && !state.panelVisible) {
                 mLpChanged.preferredMaxDisplayRefreshRate = mKeyguardMaxRefreshRate;
             } else {
                 mLpChanged.preferredMaxDisplayRefreshRate = 0;

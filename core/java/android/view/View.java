@@ -34935,7 +34935,7 @@ public class View implements Drawable.Callback, KeyEvent.Callback,
                 && !isInputMethodWindowType
                 && viewRootImpl.getFrameRateCompatibility() != FRAME_RATE_COMPATIBILITY_AT_LEAST) {
 
-            return FRAME_RATE_CATEGORY_HIGH_HINT | FRAME_RATE_CATEGORY_REASON_BOOST;
+            return FRAME_RATE_CATEGORY_HIGH | FRAME_RATE_CATEGORY_REASON_BOOST;
         }
         int category;
         switch (viewRootImpl.intermittentUpdateState()) {
