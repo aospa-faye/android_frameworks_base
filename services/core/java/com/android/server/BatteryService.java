@@ -606,6 +606,10 @@ public final class BatteryService extends SystemService {
                 && mHealthInfo.chargerDockOnline) {
             return true;
         }
+        if ((plugTypeSet & BatteryManager.BATTERY_PLUGGED_ANY) != 0
+                && mHealthInfo.batteryStatus == BatteryManager.BATTERY_STATUS_CHARGING) {
+            return true;
+        }
         return false;
     }
 
@@ -720,6 +724,16 @@ public final class BatteryService extends SystemService {
     public void update(android.hardware.health.HealthInfo info) {
         traceBegin("HealthInfoUpdate");
 
+        if ((info.batteryStatus == BatteryManager.BATTERY_STATUS_CHARGING
+                || (info.batteryStatus == BatteryManager.BATTERY_STATUS_FULL
+                        && mLastBroadcastPlugType != BATTERY_PLUGGED_NONE))
+                && !info.chargerAcOnline
+                && !info.chargerUsbOnline
+                && !info.chargerWirelessOnline
+                && !info.chargerDockOnline) {
+            info.chargerUsbOnline = true;
+        }
+
         Trace.traceCounter(
                 Trace.TRACE_TAG_POWER, "BatteryChargeCounter", info.batteryChargeCounterUah);
         Trace.traceCounter(Trace.TRACE_TAG_POWER, "BatteryCurrent", info.batteryCurrentMicroamps);
@@ -748,6 +762,8 @@ public final class BatteryService extends SystemService {
             return BatteryManager.BATTERY_PLUGGED_WIRELESS;
         } else if (healthInfo.chargerDockOnline) {
             return BatteryManager.BATTERY_PLUGGED_DOCK;
+        } else if (healthInfo.batteryStatus == BatteryManager.BATTERY_STATUS_CHARGING) {
+            return BatteryManager.BATTERY_PLUGGED_USB;
         } else {
             return BATTERY_PLUGGED_NONE;
         }
