@@ -35,6 +35,9 @@ class FakeConnectivityRepository : ConnectivityRepository {
 
     override val vcnSubId: MutableStateFlow<Int?> = MutableStateFlow(null)
 
+    override val showDataDisabledIcon: MutableStateFlow<Boolean> = MutableStateFlow(true)
+    override val showRoamingIcon: MutableStateFlow<Boolean> = MutableStateFlow(true)
+
     fun setForceHiddenIcons(hiddenIcons: Set<ConnectivitySlot>) {
         _forceHiddenIcons.value = hiddenIcons
     }

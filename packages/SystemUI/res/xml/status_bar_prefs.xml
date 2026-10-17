@@ -107,10 +107,17 @@
         android:key="airplane"
         android:title="@string/status_bar_airplane" />
 
-    <com.android.systemui.tuner.StatusBarSwitch
+    <com.android.systemui.tuner.TunerSwitch
+        android:icon="@drawable/ic_statusbar_data_disabled"
+        android:key="system:data_disabled_icon"
+        android:title="@string/data_disabled_icon_title"
+        sysui:defValue="true" />
+
+    <com.android.systemui.tuner.TunerSwitch
         android:icon="@drawable/ic_statusbar_roaming"
-        android:key="roaming"
-        android:title="@string/status_bar_roaming" />
+        android:key="system:roaming_indicator_icon"
+        android:title="@string/roaming_indicator_icon_title"
+        sysui:defValue="true" />
 
     <com.android.systemui.tuner.TunerSwitch
         android:icon="@drawable/ic_statusbar_hd_calling"

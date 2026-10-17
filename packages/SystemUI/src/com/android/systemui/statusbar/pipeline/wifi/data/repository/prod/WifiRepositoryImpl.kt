@@ -70,6 +70,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -335,11 +336,19 @@ constructor(
             .stateIn(scope, SharingStarted.Eagerly, false)
 
     override val wifiNetwork: StateFlow<WifiNetworkModel> =
-        wifiPickerTrackerInfo
-            .map { it.primaryNetwork }
-            .distinctUntilChanged()
-            .logDiffsForTable(tableLogger, initialValue = WIFI_NETWORK_DEFAULT)
-            .stateIn(scope, SharingStarted.Eagerly, WIFI_NETWORK_DEFAULT)
+        combine(
+            wifiPickerTrackerInfo.map { it.primaryNetwork }.distinctUntilChanged(),
+            connectivityRepository.showDataDisabledIcon,
+        ) { network, showDataDisabled ->
+            if (!showDataDisabled && network is WifiNetworkModel.Active && network.showExclamation) {
+                WifiNetworkModel.Active.of(showExclamation = false, level = network.level, ssid = network.ssid, hotspotDeviceType = network.hotspotDeviceType, wifiStandard = network.wifiStandard)
+            } else {
+                network
+            }
+        }
+        .distinctUntilChanged()
+        .logDiffsForTable(tableLogger, initialValue = WIFI_NETWORK_DEFAULT)
+        .stateIn(scope, SharingStarted.Eagerly, WIFI_NETWORK_DEFAULT)
 
     override val secondaryNetworks: StateFlow<List<WifiNetworkModel>> =
         wifiPickerTrackerInfo

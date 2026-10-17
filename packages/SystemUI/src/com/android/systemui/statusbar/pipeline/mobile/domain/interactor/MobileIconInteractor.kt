@@ -52,6 +52,7 @@ import com.android.systemui.statusbar.policy.FiveGServiceClient.FiveGServiceStat
 import com.android.systemui.util.CarrierNameCustomization
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -206,6 +207,7 @@ class MobileIconInteractorImpl(
     val carrierIdOverrides: MobileIconCarrierIdOverrides = MobileIconCarrierIdOverridesImpl(),
     override val alwaysUseRsrpLevelForLte: StateFlow<Boolean>,
     override val hideNoInternetState: StateFlow<Boolean>,
+    val showRoamingIcon: StateFlow<Boolean> = MutableStateFlow(true),
     networkTypeIconCustomizationFlow: StateFlow<MobileIconCustomizationMode>,
     override val showVolteIcon: StateFlow<Boolean>,
     override val showVowifiIcon: StateFlow<Boolean>,
@@ -312,8 +314,9 @@ class MobileIconInteractorImpl(
             connectionRepository.isGsm,
             connectionRepository.isRoaming,
             connectionRepository.cdmaRoaming,
-        ) { carrierNetworkChangeActive, isGsm, isRoaming, cdmaRoaming ->
-            if (carrierNetworkChangeActive) {
+            showRoamingIcon,
+        ) { carrierNetworkChangeActive, isGsm, isRoaming, cdmaRoaming, showRoaming ->
+            if (!showRoaming || carrierNetworkChangeActive) {
                 false
             } else if (isGsm) {
                 isRoaming

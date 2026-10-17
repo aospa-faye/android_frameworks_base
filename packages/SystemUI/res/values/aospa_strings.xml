@@ -23,4 +23,8 @@
 
     <!-- QS button to enable adaptive brightness -->
     <string name="accessibility_adaptive_brightness">Adaptive brightness</string>
+
+    <!-- Status bar icons -->
+    <string name="data_disabled_icon_title">Data disabled indicator</string>
+    <string name="roaming_indicator_icon_title">Roaming indicator</string>
 </resources>
