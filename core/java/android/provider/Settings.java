@@ -11618,6 +11618,12 @@ public final class Settings {
                 "screensaver_restrict_to_writeless_charging";
 
         /**
+         * Whether to turn on black theme
+         * @hide
+         */
+        public static final String SYSTEM_BLACK_THEME = "system_black_theme";
+
+        /**
          * Default, indicates that the user has not yet started the dock setup flow.
          *
          * @hide
